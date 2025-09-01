@@ -1,0 +1,41 @@
+auca_database=# CREATE TABLE students (
+    student_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    faculty VARCHAR(100)
+);
+CREATE TABLE
+auca_database=# DROP TABLE IF EXISTS students;
+DROP TABLE
+auca_database=# CREATE TABLE students (
+    student_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    faculty VARCHAR(100)
+);
+CREATE TABLE
+auca_database=# ALTER TABLE students
+auca_database-# ADD COLUMN date_of_birth DATE;
+ALTER TABLE
+auca_database=# ALTER TABLE students;
+ERROR:  syntax error at or near ";"
+LINE 1: ALTER TABLE students;
+                            ^
+auca_database=# ALTER TABLE students
+auca_database-# DROP COLUMN faculty;
+ALTER TABLE
+auca_database=# ALTER TABLE students
+auca_database-# ALTER COLUMN first_name TYPE TEXT;
+ALTER TABLE
+auca_database=# ALTER TABLE students
+auca_database-# ADD CONSTRAINT unique_student_email UNIQUE (email);
+ALTER TABLE
+auca_database=# ALTER TABLE students
+auca_database-# RENAME COLUMN email TO email_address;
+ALTER TABLE
+auca_database=# ALTER TABLE students
+auca_database-# RENAME TO university_students;
+ALTER TABLE
+auca_database=#
