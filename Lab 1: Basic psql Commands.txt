@@ -1,0 +1,108 @@
+╭─ ~ ───────────────────────────────────────────╮
+╰─❯ psql -h localhost -p 5432 -U arsen -d auca_database
+psql (17.6 (Homebrew))
+Type "help" for help.
+
+auca_database=#
+
+╭─ ~ ───────────────────────────────────────────╮
+╰─❯ psql -U arsen -d auca_database -h localhost -p 5432
+psql (17.6 (Homebrew))
+Type "help" for help.
+
+auca_database=#
+
+╭─ ~ ───────────────────────────────────── 31s ─╮
+╰─❯ psql -U arsen -d auca_database             ─╯
+psql (17.6 (Homebrew))
+Type "help" for help.
+
+auca_database=#
+
+╭─ ~ ────────────────────────────────────── 9s ─╮
+╰─❯ psql -h localhost -U arsen -d auca_database
+psql (17.6 (Homebrew))
+Type "help" for help.
+
+auca_database=#
+
+List of databases
+     Name      | Owner | Encoding | Locale Provider | Collate | Ctype | Locale | ICU Rules | Access privileges
+---------------+-------+----------+-----------------+---------+-------+--------+-----------+-------------------
+ auca_database | arsen | UTF8     | libc            | C       | C     |        |           |
+ postgres      | arsen | UTF8     | libc            | C       | C     |        |           |
+ template0     | arsen | UTF8     | libc            | C       | C     |        |           | =c/arsen         +
+               |       |          |                 |         |       |        |           | arsen=CTc/arsen
+ template1     | arsen | UTF8     | libc            | C       | C     |        |           | =c/arsen         +
+               |       |          |                 |         |       |        |           | arsen=CTc/arsen
+  | C       | C     |        |           |
+(5 rows)
+
+(END)
+
+auca_database-# \c auca_database
+You are now connected to database "auca_database" as user "arsen".
+auca_database-#
+
+auca_database-# \dt
+Did not find any relations.
+auca_database-#
+
+auca_database-# \q
+
+╭─ ~ ────────────────────────────────── 2m 36s ─╮
+╰─❯                                            ─╯
+
+auca_database=# \c postgres
+You are now connected to database "postgres" as user "arsen".
+postgres=#
+
+auca_database=# -- create data
+CREATE TABLE students (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    age INT
+);
+
+-- insert data
+INSERT INTO students (name, age) VALUES ('Alice', 21), ('Bob', 23);
+
+-- select data
+CREATE TABLE
+INSERT 0 2
+auca_database=# \dt
+         List of relations
+ Schema |   Name   | Type  | Owner
+--------+----------+-------+-------
+ public | students | table | arsen
+(1 row)
+
+auca_database=# \d students
+
+                                    Table "public.students"
+ Column |          Type          | Collation | Nullable |               Default
+--------+------------------------+-----------+----------+--------------------------------------
+ id     | integer                |           | not null | nextval('students_id_seq'::regclass)
+ name   | character varying(100) |           |          |
+ age    | integer                |           |          |
+Indexes:
+    "students_pkey" PRIMARY KEY, btree (id)
+
+(END)
+
+auca_database=# SELECT * FROM students;
+
+-- delete table
+DROP TABLE students;
+ id | name  | age
+----+-------+-----
+  1 | Alice |  21
+  2 | Bob   |  23
+(2 rows)
+DROP TABLE
+auca_database=#
+
+auca_database=# \q
+
+╭─ ~ ────────────────────────────────── 3m 12s ─╮
+╰─❯
