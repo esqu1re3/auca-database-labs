@@ -1,0 +1,218 @@
+╭─ ~ ────────────────────────────────────────────────╮
+╰─❯ psql -U arsen -d auca_database                  ─╯
+psql (17.6 (Homebrew))
+Type "help" for help.
+
+auca_database=# \dt
+              List of relations
+ Schema |        Name         | Type  | Owner
+--------+---------------------+-------+-------
+ public | university_students | table | arsen
+(1 row)
+
+auca_database=# DROP TABLE university_students;
+DROP TABLE
+auca_database=# \dt
+Did not find any relations.
+auca_database=# clear
+auca_database-#
+auca_database=# -- Define primary key at column level
+CREATE TABLE students (
+    student_id INTEGER PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(150)
+);
+CREATE TABLE
+auca_database=# \dt
+         List of relations
+ Schema |   Name   | Type  | Owner
+--------+----------+-------+-------
+ public | students | table | arsen
+(1 row)
+
+auca_database=# DROP TABLE students;
+DROP TABLE
+auca_database=# \ве
+invalid command \ве
+Try \? for help.
+auca_database=# \dt
+Did not find any relations.
+auca_database=# CREATE TABLE students (
+    student_id INTEGER,
+    name VARCHAR(100),
+    email VARCHAR(150),
+auca_database(# Ж
+auca_database(# ;
+auca_database(# \dt
+Did not find any relations.
+auca_database(#
+auca_database=# CREATE TABLE students(
+auca_database(#     student_id INTEGER,
+    name VARCHAR(100),
+    email VARCHAR(150));
+CREATE TABLE
+auca_database=# \dt
+         List of relations
+ Schema |   Name   | Type  | Owner
+--------+----------+-------+-------
+ public | students | table | arsen
+(1 row)
+
+auca_database=# -- Add primary key to existing table
+ALTER TABLE students ADD CONSTRAINT pk_students PRIMARY KEY (student_id);
+ALTER TABLE
+auca_database=# \dt
+         List of relations
+ Schema |   Name   | Type  | Owner
+--------+----------+-------+-------
+ public | students | table | arsen
+(1 row)
+
+auca_database=# \d students
+auca_database=# \d
+         List of relations
+ Schema |   Name   | Type  | Owner
+--------+----------+-------+-------
+ public | students | table | arsen
+(1 row)
+
+auca_database=# \d students
+auca_database=# DROP TABLE IF EXISTS students
+auca_database-# ^C
+auca_database=# DROP TABLE IF EXISTS students;
+DROP TABLE
+auca_database=# 'dt
+auca_database'# \dt
+auca_database'# ^C
+auca_database=# \dt
+Did not find any relations.
+auca_database=# CREATE TABLE students (
+    student_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE,
+    faculty VARCHAR(50)
+);
+CREATE TABLE
+auca_database=# -- Insert sample data
+INSERT INTO students (name, email, faculty) VALUES
+('Alice Johnson', 'alice@alatoo.edu.kg', 'Computer Science'),
+('Bob Smith', 'bob@alatoo.edu.kg', 'Mathematics'),
+('Carol Davis', 'carol@alatoo.edu.kg', 'Computer Science');
+INSERT 0 3
+auca_database=# \d students
+auca_database=# DROP TABLE IF EXISTS students;
+DROP TABLE
+auca_database=# CREATE TABLE course_enrollments (
+    student_id INTEGER,
+    course_id INTEGER,
+    semester VARCHAR(20),
+    enrollment_date DATE DEFAULT CURRENT_DATE,
+    grade CHAR(2),
+    PRIMARY KEY (student_id, course_id, semester)
+);
+
+CREATE TABLE
+auca_database=#
+-- Insert sample data
+INSERT INTO course_enrollments (student_id, course_id, semester, grade) VALUES
+(1, 101, '2024-Spring', 'A'),
+(1, 102, '2024-Spring', 'B+'),
+(2, 101, '2024-Spring', 'A-'),
+(1, 101, '2024-Fall', 'A+');  -- Same student can take same course in different semester
+INSERT 0 4
+auca_database=# \dt
+              List of relations
+ Schema |        Name        | Type  | Owner
+--------+--------------------+-------+-------
+ public | course_enrollments | table | arsen
+(1 row)
+
+auca_database=# \d students
+Did not find any relation named "students".
+auca_database=# \d course_enrollments
+auca_database=# \d course_enrollments
+auca_database=# DROP TABLE IF EXISTS course_enrollments;
+DROP TABLE
+auca_database=# \dt
+Did not find any relations.
+auca_database=# CREATE TABLE students (
+    student_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE,
+    faculty VARCHAR(50)
+);
+
+-- Insert sample data
+INSERT INTO students (name, email, faculty) VALUES
+('Alice Johnson', 'alice@alatoo.edu.kg', 'Computer Science'),
+('Bob Smith', 'bob@alatoo.edu.kg', 'Mathematics'),
+('Carol Davis', 'carol@alatoo.edu.kg', 'Computer Science');
+CREATE TABLE
+INSERT 0 3
+auca_database=# CREATE TABLE course_enrollments (
+    student_id INTEGER,
+    course_id INTEGER,
+    semester VARCHAR(20),
+    enrollment_date DATE DEFAULT CURRENT_DATE,
+auca_database=# CREATE TABLE course_enrollments (
+    student_id INTEGER,
+    course_id INDROP TABLE IF EXISTS students;
+
+auca_database=# CREATE TABLE course_enrollments (
+    student_id INTEGER,
+    course_id IN
+
+auca_database=# CREATE TABLE course_enrollments (
+    student_id INTEGER,
+    course_id INDROP TABLE IF EXISTS students;
+
+auca_database=# CREATE TABLE course_enrollments (
+    student_id INTEGER,
+    course_id INDROP TABLE IF EXISTS students;
+
+                DROP TABLE IF EXISTS course_enrollments;
+DROP TABLE
+auca_database=# CREATE TABLE products (
+    product_id SERIAL PRIMARY KEY,
+    product_name VARCHAR(100) NOT NULL,
+    price DECIMAL(10,2)
+);
+
+auca_database=# -- IDENTITY ALWAYS - PostgreSQL controls the value completely
+CREATE TABLE orders (
+    order_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    customer_name VARCHAR(100),
+    order_date DATE DEFAULT CURRENT_DATE
+);
+
+-- IDENTITY BY DEFAULT - Allows manual insertion but auto-generates if not provided
+CREATE TABLE customers (
+    customer_id INTEGER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    customer_name VARCHAR(100),
+    email VARCHAR(150)
+);
+
+-- You can still insert specific values with BY DEFAULT
+INSERT INTO customers (customer_id, customer_name, email)
+VALUES (1000, 'VIP Customer', 'vip@example.com');
+CREATE TABLE
+CREATE TABLE
+INSERT 0 1
+auca_database=# CREATE TABLE departments (
+    dept_id INTEGER PRIMARY KEY,
+    dept_name VARCHAR(100)
+);
+
+-- This will fail due to duplicate primary key
+INSERT INTO departments VALUES (1, 'Computer Science');
+INSERT INTO departments VALUES (1, 'Mathematics'); -- ERROR: duplicate key value
+
+CREATE TABLE
+INSERT 0 1
+ERROR:  duplicate key value violates unique constraint "departments_pkey"
+DETAIL:  Key (dept_id)=(1) already exists.
+auca_database=# -- This will fail because primary key cannot be NULL
+INSERT INTO departments VALUES (NULL, 'Physics'); -- ERROR: null value in column "dept_id"
+ERROR:  null value in column "dept_id" of relation "departments" violates not-null constraint
+DETAIL:  Failing row contains (null, Physics).
+auca_database=#
