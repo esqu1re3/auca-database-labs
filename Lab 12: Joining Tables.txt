@@ -1,0 +1,284 @@
+auca_database=# CREATE TABLE customers (
+    customer_id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100)
+);
+CREATE TABLE
+auca_database=# CREATE TABLE orders (
+    order_id SERIAL PRIMARY KEY,
+    customer_id INTEGER REFERENCES customers(customer_id),
+    order_date DATE,
+    total_amount DECIMAL(10,2)
+);
+CREATE TABLE
+auca_database=# CREATE TABLE order_items (
+    order_item_id SERIAL PRIMARY KEY,
+    order_id INTEGER REFERENCES orders(order_id),
+    product_id INTEGER,
+    quantity INTEGER,
+    price DECIMAL(10,2)
+);
+CREATE TABLE
+auca_database=# CREATE TABLE authors (
+    author_id SERIAL PRIMARY KEY,
+    author_name VARCHAR(100)
+);
+CREATE TABLE
+auca_database=# CREATE TABLE books (
+    book_id SERIAL PRIMARY KEY,
+    author_id INTEGER REFERENCES authors(author_id),
+    title VARCHAR(150),
+    publication_year INTEGER
+);
+CREATE TABLE
+auca_database=# CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
+    username VARCHAR(50),
+    email VARCHAR(100)
+);
+CREATE TABLE
+auca_database=# CREATE TABLE user_profiles (
+    user_id INTEGER PRIMARY KEY REFERENCES users(user_id),
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    phone VARCHAR(20)
+);
+CREATE TABLE
+auca_database=# CREATE TABLE students (
+auca_database=# INSERT INTO customers (name, email) VALUES
+('Alice Johnson', 'alice@example.com'),
+('Bob Smith', 'bob@example.com'),
+('Charlie Davis', 'charlie@example.com');
+
+INSERT INTO orders (customer_id, order_date, total_amount) VALUES
+(1, '2024-02-15', 250.00),
+(1, '2024-03-10', 400.00),
+(2, '2024-03-12', 150.00);
+
+INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
+(1, 101, 2, 50.00),
+(1, 102, 1, 150.00),
+(2, 103, 4, 100.00),
+(3, 104, 2, 75.00);
+
+INSERT INTO authors (author_name) VALUES
+('J.K. Rowling'),
+('George R.R. Martin'),
+('J.R.R. Tolkien');
+
+INSERT INTO books (author_id, title, publication_year) VALUES
+(1, 'Harry Potter and the Sorcerer''s Stone', 1997),
+(1, 'Harry Potter and the Chamber of Secrets', 1998),
+(2, 'A Game of Thrones', 1996),
+(3, 'The Hobbit', 1937);
+
+INSERT INTO users (username, email) VALUES
+('jdoe', 'jdoe@example.com'),
+('asmith', 'asmith@example.com');
+
+INSERT INTO user_profiles (user_id, first_name, last_name, phone) VALUES
+(1, 'John', 'Doe', '555-1111'),
+(2, 'Anna', 'Smith', '555-2222');
+
+INSERT INTO students (student_name) VALUES
+('Aibek Sharshenov'),
+('Ainura Toktomamatova'),
+('Bakyt Mamatov');
+
+INSERT INTO courses (course_name) VALUES
+('Database Systems'),
+('Computer Networks'),
+('Machine Learning');
+
+INSERT INTO enrollments (student_id, course_id, enrollment_date, grade) VALUES
+(1, 1, '2024-02-01', 'A'),
+(1, 2, '2024-02-05', 'B'),
+(2, 1, '2024-03-10', 'A'),
+(3, 3, '2024-04-15', NULL);
+INSERT 0 3
+INSERT 0 3
+INSERT 0 4
+INSERT 0 3
+INSERT 0 4
+INSERT 0 2
+INSERT 0 2
+INSERT 0 3
+INSERT 0 3
+INSERT 0 4
+auca_database=# \dt
+           List of relations
+ Schema |     Name      | Type  | Owner
+--------+---------------+-------+-------
+ public | authors       | table | arsen
+ public | books         | table | arsen
+ public | courses       | table | arsen
+ public | customers     | table | arsen
+ public | enrollments   | table | arsen
+ public | order_items   | table | arsen
+ public | orders        | table | arsen
+ public | students      | table | arsen
+ public | user_profiles | table | arsen
+ public | users         | table | arsen
+(10 rows)
+
+auca_database=# SELECT c.name, c.email, o.order_date, o.total_amount
+FROM customers c
+INNER JOIN orders o ON c.customer_id = o.customer_id;
+     name      |       email       | order_date | total_amount
+---------------+-------------------+------------+--------------
+ Alice Johnson | alice@example.com | 2024-02-15 |       250.00
+ Alice Johnson | alice@example.com | 2024-03-10 |       400.00
+ Bob Smith     | bob@example.com   | 2024-03-12 |       150.00
+(3 rows)
+
+auca_database=# SELECT c.name, c.email, o.order_date, o.total_amount
+FROM customers c
+LEFT JOIN orders o ON c.customer_id = o.customer_id;
+     name      |        email        | order_date | total_amount
+---------------+---------------------+------------+--------------
+ Alice Johnson | alice@example.com   | 2024-02-15 |       250.00
+ Alice Johnson | alice@example.com   | 2024-03-10 |       400.00
+ Bob Smith     | bob@example.com     | 2024-03-12 |       150.00
+ Charlie Davis | charlie@example.com |            |
+(4 rows)
+
+auca_database=# SELECT c.name, c.email, o.order_date, o.total_amount
+FROM customers c
+RIGHT JOIN orders o ON c.customer_id = o.customer_id;
+     name      |       email       | order_date | total_amount
+---------------+-------------------+------------+--------------
+ Alice Johnson | alice@example.com | 2024-02-15 |       250.00
+ Alice Johnson | alice@example.com | 2024-03-10 |       400.00
+ Bob Smith     | bob@example.com   | 2024-03-12 |       150.00
+(3 rows)
+
+auca_database=# SELECT c.name, c.email, o.order_date, o.total_amount
+FROM customers c
+FULL OUTER JOIN orders o ON c.customer_id = o.customer_id;
+     name      |        email        | order_date | total_amount
+---------------+---------------------+------------+--------------
+ Alice Johnson | alice@example.com   | 2024-02-15 |       250.00
+ Alice Johnson | alice@example.com   | 2024-03-10 |       400.00
+ Bob Smith     | bob@example.com     | 2024-03-12 |       150.00
+ Charlie Davis | charlie@example.com |            |
+(4 rows)
+
+auca_database=# SELECT c.name, p.product_name
+FROM customers c
+CROSS JOIN products p;
+ERROR:  relation "products" does not exist
+LINE 3: CROSS JOIN products p;
+                   ^
+auca_database=# SELECT c.name, o.order_date, oi.quantity, p.product_name, p.price
+FROM customers c
+INNER JOIN orders o ON c.customer_id = o.customer_id
+INNER JOIN order_items oi ON o.order_id = oi.order_id
+INNER JOIN products p ON oi.product_id = p.product_id;
+ERROR:  relation "products" does not exist
+LINE 5: INNER JOIN products p ON oi.product_id = p.product_id;
+                   ^
+auca_database=# SELECT e1.name AS employee, e2.name AS manager
+FROM employees e1
+LEFT JOIN employees e2 ON e1.manager_id = e2.employee_id;
+ERROR:  relation "employees" does not exist
+LINE 2: FROM employees e1
+             ^
+auca_database=# SELECT c.name, o.order_date, o.total_amount
+FROM customers c
+INNER JOIN orders o ON c.customer_id = o.customer_id
+WHERE o.order_date >= '2024-01-01'
+AND o.total_amount > 100;
+     name      | order_date | total_amount
+---------------+------------+--------------
+ Alice Johnson | 2024-02-15 |       250.00
+ Alice Johnson | 2024-03-10 |       400.00
+ Bob Smith     | 2024-03-12 |       150.00
+(3 rows)
+
+auca_database=# SELECT u.username, up.first_name, up.last_name, up.phone
+FROM users u
+LEFT JOIN user_profiles up ON u.user_id = up.user_id;
+ username | first_name | last_name |  phone
+----------+------------+-----------+----------
+ jdoe     | John       | Doe       | 555-1111
+ asmith   | Anna       | Smith     | 555-2222
+(2 rows)
+
+auca_database=# SELECT a.author_name, b.title, b.publication_year
+FROM authors a
+INNER JOIN books b ON a.author_id = b.author_id
+ORDER BY a.author_name, b.publication_year;
+auca_database=# SELECT s.student_name, c.course_name, e.enrollment_date, e.grade
+FROM students s
+INNER JOIN enrollments e ON s.student_id = e.student_id
+INNER JOIN courses c ON e.course_id = c.course_id
+WHERE e.grade IS NOT NULL
+ORDER BY s.student_name, c.course_name;
+auca_database=# CREATE INDEX idx_orders_customer_id ON orders(customer_id);
+CREATE INDEX idx_order_items_order_id ON order_items(order_id);
+CREATE INDEX idx_order_items_product_id ON order_items(product_id);
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+auca_database=# SELECT c.name, o.order_date
+FROM customers c
+INNER JOIN orders o ON c.customer_id = o.customer_id;
+
+     name      | order_date
+---------------+------------
+ Alice Johnson | 2024-03-10
+ Alice Johnson | 2024-02-15
+ Bob Smith     | 2024-03-12
+(3 rows)
+
+auca_database=# SELECT c.name, o.order_date
+FROM customers c, orders o;
+     name      | order_date
+---------------+------------
+ Alice Johnson | 2024-02-15
+ Alice Johnson | 2024-03-10
+ Alice Johnson | 2024-03-12
+ Bob Smith     | 2024-02-15
+ Bob Smith     | 2024-03-10
+ Bob Smith     | 2024-03-12
+ Charlie Davis | 2024-02-15
+ Charlie Davis | 2024-03-10
+ Charlie Davis | 2024-03-12
+(9 rows)
+
+auca_database=# SELECT c.name, o.order_date
+FROM customers c
+INNER JOIN orders o ON c.customer_id = o.customer_id;
+     name      | order_date
+---------------+------------
+ Alice Johnson | 2024-03-10
+ Alice Johnson | 2024-02-15
+ Bob Smith     | 2024-03-12
+(3 rows)
+
+auca_database=# SELECT c.name
+FROM customers c
+LEFT JOIN orders o ON c.customer_id = o.customer_id
+WHERE o.customer_id IS NULL;
+     name
+---------------
+ Charlie Davis
+(1 row)
+
+auca_database=# \dt
+           List of relations
+ Schema |     Name      | Type  | Owner
+--------+---------------+-------+-------
+ public | authors       | table | arsen
+ public | books         | table | arsen
+ public | courses       | table | arsen
+ public | customers     | table | arsen
+ public | enrollments   | table | arsen
+ public | order_items   | table | arsen
+ public | orders        | table | arsen
+ public | students      | table | arsen
+ public | user_profiles | table | arsen
+ public | users         | table | arsen
+(10 rows)
+
+auca_database=#
