@@ -1,0 +1,82 @@
+auca_database=# CREATE TABLE Students (
+    student_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    birth_date DATE
+);
+ERROR:  relation "students" already exists
+auca_database=# \dt
+           List of relations
+ Schema |     Name     | Type  | Owner
+--------+--------------+-------+-------
+ public | authors      | table | arsen
+ public | book_authors | table | arsen
+ public | books        | table | arsen
+ public | departments  | table | arsen
+ public | loans        | table | arsen
+ public | members      | table | arsen
+ public | students     | table | arsen
+(7 rows)
+
+auca_database=# DROP TABLE IF EXISTS authors, book_authors, books, departments, loans, members,students CASCADE;
+DROP TABLE
+auca_database=# \dt
+Did not find any relations.
+auca_database=# CREATE TABLE Students (
+    student_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    birth_date DATE
+);
+CREATE TABLE
+auca_database=# \dt
+         List of relations
+ Schema |   Name   | Type  | Owner
+--------+----------+-------+-------
+ public | students | table | arsen
+(1 row)
+
+auca_database=# INSERT INTO Students (first_name, last_name, birth_date)
+VALUES ('Aibek', 'Sharshenov', '2002-05-12');
+INSERT 0 1
+auca_database=# INSERT INTO Students (first_name, last_name, birth_date) VALUES
+('Ainura', 'Toktomamatova', '2001-09-23'),
+('Bakyt', 'Mamatov', '2003-01-15'),
+('Gulzat', 'Sultanova', '2002-07-30');
+INSERT 0 3
+auca_database=# UPDATE Students
+SET birth_date = '2002-05-15'
+WHERE first_name = 'Aibek' AND last_name = 'Sharshenov';
+UPDATE 1
+auca_database=# DELETE FROM Students
+WHERE first_name = 'Gulzat' AND last_name = 'Sultanova';
+DELETE 1
+auca_database=# DELETE FROM Students
+WHERE birth_date < '2002-01-01';
+DELETE 1
+auca_database=# \dt
+         List of relations
+ Schema |   Name   | Type  | Owner
+--------+----------+-------+-------
+ public | students | table | arsen
+(1 row)
+
+auca_database=# UPDATE Students
+SET last_name = 'Bekov'
+WHERE last_name IN ('Uulu', 'Isakov');
+UPDATE 0
+auca_database=#
+DELETE FROM Students
+WHERE student_id IN (2, 3, 5);
+DELETE 1
+auca_database=# SELECT * FROM public.students
+ORDER BY student_id ASC
+auca_database-#
+DELETE FROM Students
+WHERE student_id IN (2, 3, 5);
+ERROR:  syntax error at or near "DELETE"
+LINE 4: DELETE FROM Students
+        ^
+auca_database=# SELECT * FROM public.students
+auca_database-# ^C
+auca_database=#
