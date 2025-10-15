@@ -1,0 +1,190 @@
+auca_database=# CREATE TABLE students_bad (
+    student_id INT PRIMARY KEY,
+    name VARCHAR(100),
+    phone_numbers TEXT
+);
+CREATE TABLE
+auca_database=# \dt
+           List of relations
+ Schema |     Name     | Type  | Owner
+--------+--------------+-------+-------
+ public | students_bad | table | arsen
+(1 row)
+
+auca_database=# CREATE TABLE students (
+    student_id INT PRIMARY KEY,
+    name VARCHAR(100)
+);
+CREATE TABLE
+auca_database=# CREATE TABLE student_phones (
+    student_id INT,
+    phone_number VARCHAR(15),
+    phone_type VARCHAR(20),
+    PRIMARY KEY (student_id, phone_number),
+    FOREIGN KEY (student_id) REFERENCES students(student_id)
+);
+CREATE TABLE
+auca_database=# \dt
+            List of relations
+ Schema |      Name      | Type  | Owner
+--------+----------------+-------+-------
+ public | student_phones | table | arsen
+ public | students       | table | arsen
+ public | students_bad   | table | arsen
+(3 rows)
+
+auca_database=# DROP TABLE IF EXISTS student_phones, students, students_bad;
+DROP TABLE
+auca_database=# \dt
+Did not find any relations.
+auca_database=# CREATE TABLE enrollments_bad (
+    student_id INT,
+    course_id INT,
+    course_name VARCHAR(100),
+    grade CHAR(2),
+    PRIMARY KEY (student_id, course_id)
+);
+CREATE TABLE
+auca_database=#
+CREATE TABLE courses (
+    course_id INT PRIMARY KEY,
+    course_name VARCHAR(100),
+    credits INT
+);
+CREATE TABLE
+auca_database=# CREATE TABLE enrollments (
+    student_id INT,
+    course_id INT,
+    grade CHAR(2),
+    PRIMARY KEY (student_id, course_id),
+    FOREIGN KEY (student_id) REFERENCES students(student_id),
+    FOREIGN KEY (course_id) REFERENCES courses(course_id)
+);
+ERROR:  relation "students" does not exist
+auca_database=# CREATE TABLE students (
+    student_id INT PRIMARY KEY,
+    name VARCHAR(100)
+);
+CREATE TABLE
+auca_database=# CREATE TABLE enrollments (
+    student_id INT,
+    course_id INT,
+    grade CHAR(2),
+    PRIMARY KEY (student_id, course_id),
+    FOREIGN KEY (student_id) REFERENCES students(student_id),
+    FOREIGN KEY (course_id) REFERENCES courses(course_id)
+);
+CREATE TABLE
+auca_database=# \dt
+            List of relations
+ Schema |      Name       | Type  | Owner
+--------+-----------------+-------+-------
+ public | courses         | table | arsen
+ public | enrollments     | table | arsen
+ public | enrollments_bad | table | arsen
+ public | students        | table | arsen
+(4 rows)
+
+auca_database=# DROP TABLE IF EXISTS courses, students, enrollments_bad;
+ERROR:  cannot drop desired object(s) because other objects depend on them
+DETAIL:  constraint enrollments_student_id_fkey on table enrollments depends on table students
+constraint enrollments_course_id_fkey on table enrollments depends on table courses
+HINT:  Use DROP ... CASCADE to drop the dependent objects too.
+auca_database=# DROP TABLE IF EXISTS courses, students, enrollments_bad CASCADE;
+NOTICE:  drop cascades to 2 other objects
+DETAIL:  drop cascades to constraint enrollments_student_id_fkey on table enrollments
+drop cascades to constraint enrollments_course_id_fkey on table enrollments
+DROP TABLE
+auca_database=# \dt
+          List of relations
+ Schema |    Name     | Type  | Owner
+--------+-------------+-------+-------
+ public | enrollments | table | arsen
+(1 row)
+
+auca_database=# DROP TABLE IF EXISTS enrollments CASCADE;
+DROP TABLE
+auca_database=# \dt
+Did not find any relations.
+auca_database=# CREATE TABLE departments (
+    department_id INT PRIMARY KEY,
+    department_name VARCHAR(100),
+    department_head VARCHAR(100)
+);
+CREATE TABLE
+auca_database=# CREATE TABLE students (
+    student_id INT PRIMARY KEY,
+    name VARCHAR(100),
+    department_id INT,
+    FOREIGN KEY (department_id) REFERENCES departments(department_id)
+);
+CREATE TABLE
+auca_database=#
+auca_database=# \dt
+          List of relations
+ Schema |    Name     | Type  | Owner
+--------+-------------+-------+-------
+ public | departments | table | arsen
+ public | students    | table | arsen
+(2 rows)
+
+auca_database=# \d departments
+auca_database=# \d students
+auca_database=# CREATE TABLE authors (
+    author_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    birth_date DATE
+);
+CREATE TABLE
+auca_database=# CREATE TABLE books (
+    book_id SERIAL PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    isbn VARCHAR(13) UNIQUE,
+    publication_year INTEGER,
+    available_copies INTEGER DEFAULT 1
+);
+CREATE TABLE
+auca_database=# CREATE TABLE book_authors (
+    book_id INTEGER,
+    author_id INTEGER,
+    PRIMARY KEY (book_id, author_id),
+    FOREIGN KEY (book_id) REFERENCES books(book_id),
+    FOREIGN KEY (author_id) REFERENCES authors(author_id)
+);
+CREATE TABLE
+auca_database=# CREATE TABLE members (
+    member_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(15),
+    membership_date DATE DEFAULT CURRENT_DATE
+);
+CREATE TABLE
+auca_database=# CREATE TABLE loans (
+    loan_id SERIAL PRIMARY KEY,
+    member_id INTEGER NOT NULL,
+    book_id INTEGER NOT NULL,
+    loan_date DATE DEFAULT CURRENT_DATE,
+    due_date DATE NOT NULL,
+    return_date DATE,
+    late_fee DECIMAL(10,2) DEFAULT 0.00,
+    FOREIGN KEY (member_id) REFERENCES members(member_id),
+    FOREIGN KEY (book_id) REFERENCES books(book_id)
+);
+CREATE TABLE
+auca_database=# \dt
+           List of relations
+ Schema |     Name     | Type  | Owner
+--------+--------------+-------+-------
+ public | authors      | table | arsen
+ public | book_authors | table | arsen
+ public | books        | table | arsen
+ public | departments  | table | arsen
+ public | loans        | table | arsen
+ public | members      | table | arsen
+ public | students     | table | arsen
+(7 rows)
+
+auca_database=#
