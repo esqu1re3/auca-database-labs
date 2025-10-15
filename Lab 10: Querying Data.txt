@@ -1,0 +1,266 @@
+auca_database=# CREATE TABLE employees (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    department VARCHAR(100),
+    department_id INTEGER,
+    salary DECIMAL(10,2)
+);
+CREATE TABLE
+auca_database=# CREATE TABLE sales (
+    sale_id SERIAL PRIMARY KEY,
+    employee_id INTEGER NOT NULL,
+    amount DECIMAL(10,2),
+    sale_date DATE DEFAULT CURRENT_DATE,
+    FOREIGN KEY (employee_id) REFERENCES employees(id)
+);
+CREATE TABLE
+auca_database=# CREATE TABLE products (
+    product_id SERIAL PRIMARY KEY,
+    product_name VARCHAR(100) NOT NULL,
+    price DECIMAL(10,2) NOT NULL
+);
+CREATE TABLE
+auca_database=# CREATE TABLE customers (
+    customer_id SERIAL PRIMARY KEY,
+    customer_name VARCHAR(100),
+    email VARCHAR(100)
+);
+CREATE TABLE
+auca_database=# CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100)
+);
+CREATE TABLE
+auca_database=# INSERT INTO employees (name, department, department_id, salary) VALUES
+('Alice', 'Engineering', 1, 95000),
+('Bob', 'Sales', 2, 72000),
+('Charlie', 'Engineering', 1, 120000),
+('Diana', 'Marketing', 3, 60000),
+('Ethan', 'Engineering', 1, 50000);
+INSERT 0 5
+auca_database=# INSERT INTO sales (employee_id, amount) VALUES
+(2, 1500),
+(2, 900),
+(1, 2000),
+(3, 3000),
+(5, 400);
+INSERT 0 5
+auca_database=# INSERT INTO products (product_name, price) VALUES
+('Strawberry', 25.00),
+('Blueberry', 30.00),
+('Raspberry', 40.00),
+('Banana', 15.00),
+('Apple', 20.00);
+INSERT 0 5
+auca_database=# INSERT INTO customers (customer_name, email) VALUES
+('Brandon', 'brandon@gmail.com'),
+('Brad', 'brad@yahoo.com'),
+('Sara', 'sara@outlook.com'),
+('Bruce', 'bruce@gmail.com');
+INSERT 0 4
+auca_database=# INSERT INTO users (name, email) VALUES
+('John', 'john@gmail.com'),
+('Mike', 'mike@example.com'),
+('Anna', 'anna@GMAIL.COM'),
+('Kate', 'kate@yahoo.com');
+INSERT 0 4
+auca_database=# \ве
+invalid command \ве
+Try \? for help.
+auca_database=# \dt
+         List of relations
+ Schema |   Name    | Type  | Owner
+--------+-----------+-------+-------
+ public | customers | table | arsen
+ public | employees | table | arsen
+ public | products  | table | arsen
+ public | sales     | table | arsen
+ public | users     | table | arsen
+(5 rows)
+
+auca_database=# SELECT * FROM employees;
+ id |  name   | department  | department_id |  salary
+----+---------+-------------+---------------+-----------
+  1 | Alice   | Engineering |             1 |  95000.00
+  2 | Bob     | Sales       |             2 |  72000.00
+  3 | Charlie | Engineering |             1 | 120000.00
+  4 | Diana   | Marketing   |             3 |  60000.00
+  5 | Ethan   | Engineering |             1 |  50000.00
+(5 rows)
+
+auca_database=# SELECT name, department FROM employees;
+  name   | department
+---------+-------------
+ Alice   | Engineering
+ Bob     | Sales
+ Charlie | Engineering
+ Diana   | Marketing
+ Ethan   | Engineering
+(5 rows)
+
+auca_database=# SELECT name, salary, salary * 0.10 AS potential_bonus
+FROM employees;
+  name   |  salary   | potential_bonus
+---------+-----------+-----------------
+ Alice   |  95000.00 |       9500.0000
+ Bob     |  72000.00 |       7200.0000
+ Charlie | 120000.00 |      12000.0000
+ Diana   |  60000.00 |       6000.0000
+ Ethan   |  50000.00 |       5000.0000
+(5 rows)
+
+auca_database=# SELECT column1, column2
+FROM table_name
+WHERE condition;
+ERROR:  relation "table_name" does not exist
+LINE 2: FROM table_name
+             ^
+auca_database=# SELECT name, salary
+FROM employees
+WHERE department = 'Sales';
+ name |  salary
+------+----------
+ Bob  | 72000.00
+(1 row)
+
+auca_database=# SELECT name
+FROM employees
+WHERE salary > 75000 AND department = 'Engineering';
+  name
+---------
+ Alice
+ Charlie
+(2 rows)
+
+auca_database=# SELECT product_name, price
+FROM products
+WHERE price BETWEEN 20 AND 50;
+ product_name | price
+--------------+-------
+ Strawberry   | 25.00
+ Blueberry    | 30.00
+ Raspberry    | 40.00
+ Apple        | 20.00
+(4 rows)
+
+auca_database=# SELECT customer_name
+FROM customers
+WHERE customer_name LIKE 'Bra%';
+ customer_name
+---------------
+ Brandon
+ Brad
+(2 rows)
+
+auca_database=# SELECT product_name
+FROM products
+WHERE product_name LIKE '%berry';
+ product_name
+--------------
+ Strawberry
+ Blueberry
+ Raspberry
+(3 rows)
+
+auca_database=# SELECT email
+FROM users
+WHERE email ILIKE '%@gmail.com';
+     email
+----------------
+ john@gmail.com
+ anna@GMAIL.COM
+(2 rows)
+
+auca_database=# SELECT name
+FROM employees
+WHERE name ~ '^[AB]';
+ name
+-------
+ Alice
+ Bob
+(2 rows)
+
+auca_database=# SELECT email
+FROM users
+WHERE email ~* '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$';
+      email
+------------------
+ john@gmail.com
+ mike@example.com
+ anna@GMAIL.COM
+ kate@yahoo.com
+(4 rows)
+
+auca_database=# SELECT name, department
+FROM employees
+WHERE department_id IN (3, 5, 7);
+-- Or with a subquery
+SELECT name
+FROM employees
+WHERE id IN (SELECT employee_id FROM sales WHERE amount > 1000);
+ name  | department
+-------+------------
+ Diana | Marketing
+(1 row)
+
+  name
+---------
+ Alice
+ Bob
+ Charlie
+(3 rows)
+
+auca_database=# SELECT name
+FROM employees e
+WHERE EXISTS (
+  SELECT 1
+  FROM sales s
+  WHERE s.employee_id = e.id AND s.amount > 1000
+);
+  name
+---------
+ Alice
+ Bob
+ Charlie
+(3 rows)
+
+auca_database=# SELECT name, salary,
+  CASE
+    WHEN salary > 100000 THEN 'Senior'
+    WHEN salary BETWEEN 60000 AND 100000 THEN 'Mid-Level'
+    ELSE 'Junior'
+  END AS employee_level
+FROM employees;
+  name   |  salary   | employee_level
+---------+-----------+----------------
+ Alice   |  95000.00 | Mid-Level
+ Bob     |  72000.00 | Mid-Level
+ Charlie | 120000.00 | Senior
+ Diana   |  60000.00 | Mid-Level
+ Ethan   |  50000.00 | Junior
+(5 rows)
+
+auca_database=# WITH department_averages AS (
+  SELECT
+    department,
+    AVG(salary) AS avg_salary
+  FROM employees
+  GROUP BY department
+)
+
+SELECT
+  e.name,
+  e.salary,
+  e.department,
+  da.avg_salary
+FROM employees e
+JOIN department_averages da ON e.department = da.department
+WHERE e.salary > da.avg_salary;
+  name   |  salary   | department  |     avg_salary
+---------+-----------+-------------+--------------------
+ Alice   |  95000.00 | Engineering | 88333.333333333333
+ Charlie | 120000.00 | Engineering | 88333.333333333333
+(2 rows)
+
+auca_database=#
