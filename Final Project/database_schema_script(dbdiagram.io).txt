@@ -1,0 +1,40 @@
+Table organizations {
+  organization_id integer [primary key]
+  name varchar
+  contact_person varchar
+  phone varchar
+}
+
+Table volunteers {
+  volunteer_id integer [primary key]
+  name varchar
+  city varchar
+  phone varchar
+}
+
+Table events {
+  event_id integer [primary key]
+  title varchar
+  location varchar
+  event_date date
+  organization_id integer [not null]
+}
+
+Table participation {
+  participation_id integer [primary key]
+  volunteer_id integer [not null]
+  event_id integer [not null]
+  hours_worked integer
+
+  indexes {
+    (volunteer_id, event_id) [unique]
+  }
+}
+
+// Relationships
+
+Ref org_events: events.organization_id > organizations.organization_id // one organization -> many events
+
+Ref volunteer_participation: participation.volunteer_id > volunteers.volunteer_id // one volunteer -> many participations
+
+Ref event_participation: participation.event_id > events.event_id // one event -> many participations
