@@ -1,0 +1,49 @@
+-- Создаем базу данных через psql
+CREATE DATABASE volunteer_db;
+
+-- Создаем таблицу организаций
+CREATE TABLE organizations (
+    organization_id SERIAL PRIMARY KEY,     
+    name VARCHAR(100) NOT NULL,             
+    contact_person VARCHAR(100),           
+    phone VARCHAR(20)                       
+);
+
+-- Создаем таблицу волонтеров
+CREATE TABLE volunteers (
+    volunteer_id SERIAL PRIMARY KEY,       
+    name VARCHAR(100) NOT NULL,            
+    city VARCHAR(50),                     
+    phone VARCHAR(20)                       
+);
+
+-- Создаем таблицу мероприятий
+CREATE TABLE events (
+    event_id SERIAL PRIMARY KEY,            
+    title VARCHAR(100) NOT NULL,            
+    location VARCHAR(100),                   
+    event_date DATE NOT NULL,                
+    organization_id INT NOT NULL,           
+    CONSTRAINT fk_events_organization
+        FOREIGN KEY (organization_id)
+        REFERENCES organizations(organization_id)
+        ON DELETE CASCADE                   
+);
+
+-- Создаем таблицу участия волонтеров в мероприятиях
+CREATE TABLE participation (
+    participation_id SERIAL PRIMARY KEY,   
+    volunteer_id INT NOT NULL,
+    event_id INT NOT NULL,
+    hours_worked INT CHECK (hours_worked >= 0), 
+    CONSTRAINT fk_participation_volunteer
+        FOREIGN KEY (volunteer_id)
+        REFERENCES volunteers(volunteer_id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_participation_event
+        FOREIGN KEY (event_id)
+        REFERENCES events(event_id)
+        ON DELETE CASCADE,
+    CONSTRAINT uq_participation_unique
+        UNIQUE (volunteer_id, event_id)    
+);
