@@ -1,0 +1,64 @@
+-- Заполнение организаций
+INSERT INTO organizations (name, contact_person, phone) VALUES
+('Green Peace', 'Maksim Ivanov', '+996700123456'),
+('Future Development', 'Bakyt Asanov', '+996800123456'),
+('Modern Intelligence', 'Aleksandra Orlova', '+996900123456'),
+('Eco Steps', 'Nurlan Dzhumakeev', '+996701111111'),
+('Social Progress', 'Elena Petrova', '+996702222222'),
+('Youth Foundation', 'Ivan Sergeev', '+996703333333'),
+('Charity Union', 'Aizhan Amanova', '+996704444444');
+
+-- Заполнение волонтеров
+INSERT INTO volunteers (name, city, phone) VALUES
+('Amanbek Aliaskarov', 'Bishkek', '+996555000001'),
+('Diana Omurkulova', 'Osh', '+996555000002'),
+('Alibek Amanbaev', 'Bishkek', '+996777000003'),
+('Karina Alimova', 'Karakol', '+996555000004'),
+('Timur Sadykov', 'Tokmok', '+996555000005'),
+('Elmira Boronbaeva', 'Jalal-Abad', '+996555000006'),
+('Maksat Duisheev', 'Bishkek', '+996555000007'),
+('Nazira Tashmatova', 'Osh', '+996555000008'),
+('Aruzhan Saparova', 'Naryn', '+996555000009'),
+('Bakytbek Kydyraliev', 'Kyzyl-Kiya', '+996555000010');
+
+-- Заполнение мероприятий
+INSERT INTO events (title, location, event_date, organization_id) VALUES
+('Subbotnik in park', 'Bishkek, Oak Park', '2025-03-10', 1),
+('Tree planting', 'Osh, city garden', '2025-03-15', 2),
+('Charity fair', 'Bishkek, school 45', '2025-03-20', 3),
+('Cleaning Issyk-Kul beach', 'Issyk-Kul', '2025-04-01', 1),
+('Eco Festival', 'Bishkek, Ala-Too Square', '2025-04-10', 4),
+('Youth Conference', 'Osh State University', '2025-04-25', 5),
+('Blood Donation', 'Bishkek, Medical Center', '2025-05-02', 6),
+('Run for Health', 'Karakol, Central stadium', '2025-05-12', 7),
+('Animal Shelter Day', 'Tokmok, Shelter', '2025-05-22', 2),
+('Book Drive', 'Naryn, Library', '2025-06-03', 5);
+
+-- Заполнение участия волонтеров в мероприятиях
+INSERT INTO participation (volunteer_id, event_id, hours_worked) VALUES
+(1, 1, 4),
+(2, 2, 5),
+(1, 3, 3),
+(3, 3, 6),
+(4, 4, 8),
+(1, 4, 7),
+(5, 5, 6),
+(6, 6, 5),
+(2, 5, 4),
+(3, 2, 3),
+(5, 1, 2),
+(6, 3, 4),
+(7, 7, 5),
+(8, 8, 3),
+(9, 9, 6),
+(10, 10, 4),
+(2, 1, 2),
+(4, 2, 5),
+(3, 5, 2),
+(8, 7, 6),
+(9, 8, 5),
+(7, 9, 2),
+(10, 4, 3),
+(5, 6, 4),
+(6, 8, 7),
+(1, 10, 8);
